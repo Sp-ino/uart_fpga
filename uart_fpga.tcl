@@ -18,20 +18,33 @@
 proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
+ "[file normalize "$origin_dir/vivado_project/tb_behav.wcfg"]"\
+ "[file normalize "$origin_dir/vivado_project/tb_behav1.wcfg"]"\
+  ]
+  foreach ifile $files {
+    if { ![file isfile $ifile] } {
+      puts " Could not find local file $ifile "
+      set status false
+    }
+  }
+
+  set files [list \
  "[file normalize "$origin_dir/src/common_pkg.vhd"]"\
  "[file normalize "$origin_dir/src/uart_pkg.vhd"]"\
- "[file normalize "$origin_dir/src/deserializer_ip.vhd"]"\
- "[file normalize "$origin_dir/src/deserializer_ip_wrapper.vhd"]"\
  "[file normalize "$origin_dir/src/ckdiv_ip.vhd"]"\
+ "[file normalize "$origin_dir/src/deserializer_ip.vhd"]"\
+ "[file normalize "$origin_dir/src/receiver_top.vhd"]"\
  "[file normalize "$origin_dir/src/serializer_ip.vhd"]"\
- "[file normalize "$origin_dir/src/serializer_ip_wrapper.vhd"]"\
+ "[file normalize "$origin_dir/src/transmitter_top.vhd"]"\
  "[file normalize "$origin_dir/src/uart_rx_ip.vhd"]"\
- "[file normalize "$origin_dir/src/uart_rx_ip_wrapper.vhd"]"\
  "[file normalize "$origin_dir/src/uart_tx_ip.vhd"]"\
- "[file normalize "$origin_dir/src/uart_tx_ip_wrapper.vhd"]"\
+ "[file normalize "$origin_dir/src/txrx_top.vhd"]"\
  "[file normalize "$origin_dir/src/utils.vhd"]"\
  "[file normalize "$origin_dir/src/constr/phys_constr.xdc"]"\
  "[file normalize "$origin_dir/src/constr/timing_constr.xdc"]"\
+ "[file normalize "$origin_dir/src/tb/rx_interf_tb.vhd"]"\
+ "[file normalize "$origin_dir/src/tb/tx_interf_tb.vhd"]"\
+ "[file normalize "$origin_dir/src/tb/top_tb.vhd"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -138,6 +151,8 @@ set_property -name "revised_directory_structure" -value "1" -objects $obj
 set_property -name "sim.central_dir" -value "$proj_dir/${_xil_proj_name_}.ip_user_files" -objects $obj
 set_property -name "sim.ip.auto_export_scripts" -value "1" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
+set_property -name "target_language" -value "VHDL" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "25" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -149,15 +164,14 @@ set obj [get_filesets sources_1]
 set files [list \
  [file normalize "${origin_dir}/src/common_pkg.vhd"] \
  [file normalize "${origin_dir}/src/uart_pkg.vhd"] \
- [file normalize "${origin_dir}/src/deserializer_ip.vhd"] \
- [file normalize "${origin_dir}/src/deserializer_ip_wrapper.vhd"] \
  [file normalize "${origin_dir}/src/ckdiv_ip.vhd"] \
+ [file normalize "${origin_dir}/src/deserializer_ip.vhd"] \
+ [file normalize "${origin_dir}/src/receiver_top.vhd"] \
  [file normalize "${origin_dir}/src/serializer_ip.vhd"] \
- [file normalize "${origin_dir}/src/serializer_ip_wrapper.vhd"] \
+ [file normalize "${origin_dir}/src/transmitter_top.vhd"] \
  [file normalize "${origin_dir}/src/uart_rx_ip.vhd"] \
- [file normalize "${origin_dir}/src/uart_rx_ip_wrapper.vhd"] \
  [file normalize "${origin_dir}/src/uart_tx_ip.vhd"] \
- [file normalize "${origin_dir}/src/uart_tx_ip_wrapper.vhd"] \
+ [file normalize "${origin_dir}/src/txrx_top.vhd"] \
  [file normalize "${origin_dir}/src/utils.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
@@ -173,47 +187,42 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-set file "$origin_dir/src/deserializer_ip.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/src/deserializer_ip_wrapper.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
 set file "$origin_dir/src/ckdiv_ip.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
+
+set file "$origin_dir/src/deserializer_ip.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
+
+set file "$origin_dir/src/receiver_top.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
 
 set file "$origin_dir/src/serializer_ip.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
 
-set file "$origin_dir/src/serializer_ip_wrapper.vhd"
+set file "$origin_dir/src/transmitter_top.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
 
 set file "$origin_dir/src/uart_rx_ip.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/src/uart_rx_ip_wrapper.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
 
 set file "$origin_dir/src/uart_tx_ip.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
 
-set file "$origin_dir/src/uart_tx_ip_wrapper.vhd"
+set file "$origin_dir/src/txrx_top.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -229,7 +238,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
-set_property -name "top" -value "deserializer_ip_wrapper" -objects $obj
+set_property -name "top" -value "txrx_top" -objects $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -266,11 +275,92 @@ if {[string equal [get_filesets -quiet sim_1] ""]} {
 
 # Set 'sim_1' fileset object
 set obj [get_filesets sim_1]
-# Empty (no sources present)
+set files [list \
+ [file normalize "${origin_dir}/src/tb/rx_interf_tb.vhd"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sim_1' fileset file properties for remote files
+set file "$origin_dir/src/tb/rx_interf_tb.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+
+# Set 'sim_1' fileset file properties for local files
+# None
 
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
-set_property -name "top" -value "deserializer_ip_wrapper" -objects $obj
+set_property -name "top" -value "tb" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
+set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Create 'sim_2' fileset (if not found)
+if {[string equal [get_filesets -quiet sim_2] ""]} {
+  create_fileset -simset sim_2
+}
+
+# Set 'sim_2' fileset object
+set obj [get_filesets sim_2]
+set files [list \
+ [file normalize "${origin_dir}/src/tb/tx_interf_tb.vhd"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Add local files from the original project (-no_copy_sources specified)
+set files [list \
+ [file normalize "${origin_dir}/vivado_project/tb_behav.wcfg" ]\
+]
+set added_files [add_files -fileset sim_2 $files]
+
+# Set 'sim_2' fileset file properties for remote files
+set file "$origin_dir/src/tb/tx_interf_tb.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_2] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+
+# Set 'sim_2' fileset file properties for local files
+# None
+
+# Set 'sim_2' fileset properties
+set obj [get_filesets sim_2]
+set_property -name "top" -value "tb" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
+set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Create 'sim_3' fileset (if not found)
+if {[string equal [get_filesets -quiet sim_3] ""]} {
+  create_fileset -simset sim_3
+}
+
+# Set 'sim_3' fileset object
+set obj [get_filesets sim_3]
+set files [list \
+ [file normalize "${origin_dir}/src/tb/top_tb.vhd"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Add local files from the original project (-no_copy_sources specified)
+set files [list \
+ [file normalize "${origin_dir}/vivado_project/tb_behav1.wcfg" ]\
+]
+set added_files [add_files -fileset sim_3 $files]
+
+# Set 'sim_3' fileset file properties for remote files
+set file "$origin_dir/src/tb/top_tb.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_3] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+
+# Set 'sim_3' fileset file properties for local files
+# None
+
+# Set 'sim_3' fileset properties
+set obj [get_filesets sim_3]
+set_property -name "top" -value "tb" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Set 'utils_1' fileset object
