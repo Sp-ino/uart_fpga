@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Webtalk v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:33 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Wed Aug 30 13:01:47 2023
+# Process ID: 22268
+# Current directory: C:/Users/spino/Documents/fpga/uart_fpga
+# Command line: wbtcv.exe -mode batch -source C:/Users/spino/Documents/fpga/uart_fpga/vivado_project/uart_fpga.hw/webtalk/labtool_webtalk.tcl -notrace
+# Log file: C:/Users/spino/Documents/fpga/uart_fpga/webtalk.log
+# Journal file: C:/Users/spino/Documents/fpga/uart_fpga\webtalk.jou
+#-----------------------------------------------------------
+source C:/Users/spino/Documents/fpga/uart_fpga/vivado_project/uart_fpga.hw/webtalk/labtool_webtalk.tcl -notrace

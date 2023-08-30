@@ -38,15 +38,14 @@ end tb;
 
 architecture Behavioral of tb is
 
-    component txrx_top is
+    component txrx_top_for_implementation is
     port (
         i_ck : in std_logic;
         i_rst : in std_logic;
         i_rx : in std_logic;
         i_transmit_req: in std_logic;
-        i_tx_word: in std_logic_vector (word_width_bit - 1 downto 0);
-        o_rx_word: out std_logic_vector (word_width_bit - 1 downto 0);
-        o_buffer_full: out std_logic;
+        o_rx_buffer_full: out std_logic;
+        o_tx_busy: out std_logic;
         o_tx : out std_logic
     );
     end component;
@@ -57,9 +56,9 @@ architecture Behavioral of tb is
     constant in1: integer := 1;
     constant in2: integer := 1234556;
 
-    signal word: std_logic_vector (word_width_bit - 1 downto 0);
     signal transmit: std_logic;
-    signal buffer_full: std_logic;
+    signal rx_buffer_full: std_logic;
+    signal tx_busy: std_logic;
     signal clock: std_logic;
     signal rst: std_logic;
     signal rx: std_logic;
@@ -67,15 +66,14 @@ architecture Behavioral of tb is
 
 begin
 
-    top: txrx_top
+    top: txrx_top_for_implementation
     port map (
         i_ck => clock,
         i_rst => rst,
         i_rx => rx,
         i_transmit_req => transmit,
-        i_tx_word => word,
-        o_rx_word => word,
-        o_buffer_full => buffer_full,
+        o_rx_buffer_full => rx_buffer_full,
+        o_tx_busy => tx_busy,
         o_tx => tx
     );
         

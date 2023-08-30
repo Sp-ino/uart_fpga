@@ -38,6 +38,7 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/transmitter_top.vhd"]"\
  "[file normalize "$origin_dir/src/uart_rx_ip.vhd"]"\
  "[file normalize "$origin_dir/src/uart_tx_ip.vhd"]"\
+ "[file normalize "$origin_dir/src/txrx_top_for_implementation.vhd"]"\
  "[file normalize "$origin_dir/src/txrx_top.vhd"]"\
  "[file normalize "$origin_dir/src/utils.vhd"]"\
  "[file normalize "$origin_dir/src/constr/phys_constr.xdc"]"\
@@ -152,7 +153,7 @@ set_property -name "sim.central_dir" -value "$proj_dir/${_xil_proj_name_}.ip_use
 set_property -name "sim.ip.auto_export_scripts" -value "1" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "25" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "53" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -171,6 +172,7 @@ set files [list \
  [file normalize "${origin_dir}/src/transmitter_top.vhd"] \
  [file normalize "${origin_dir}/src/uart_rx_ip.vhd"] \
  [file normalize "${origin_dir}/src/uart_tx_ip.vhd"] \
+ [file normalize "${origin_dir}/src/txrx_top_for_implementation.vhd"] \
  [file normalize "${origin_dir}/src/txrx_top.vhd"] \
  [file normalize "${origin_dir}/src/utils.vhd"] \
 ]
@@ -222,6 +224,11 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL 2008" -objects $file_obj
 
+set file "$origin_dir/src/txrx_top_for_implementation.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 set file "$origin_dir/src/txrx_top.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -238,7 +245,8 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
-set_property -name "top" -value "txrx_top" -objects $obj
+set_property -name "top" -value "txrx_top_for_implementation" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -266,7 +274,9 @@ set_property -name "file_type" -value "XDC" -objects $file_obj
 
 # Set 'constrs_1' fileset properties
 set obj [get_filesets constrs_1]
+set_property -name "target_constrs_file" -value "[file normalize "$origin_dir/src/constr/timing_constr.xdc"]" -objects $obj
 set_property -name "target_part" -value "xc7a35tcpg236-1" -objects $obj
+set_property -name "target_ucf" -value "[file normalize "$origin_dir/src/constr/timing_constr.xdc"]" -objects $obj
 
 # Create 'sim_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sim_1] ""]} {
@@ -612,6 +622,7 @@ set_property -name "options.warn_on_violation" -value "1" -objects $obj
 set obj [get_runs impl_1]
 set_property -name "part" -value "xc7a35tcpg236-1" -objects $obj
 set_property -name "strategy" -value "Vivado Implementation Defaults" -objects $obj
+set_property -name "steps.write_bitstream.args.bin_file" -value "1" -objects $obj
 set_property -name "steps.write_bitstream.args.readback_file" -value "0" -objects $obj
 set_property -name "steps.write_bitstream.args.verbose" -value "0" -objects $obj
 

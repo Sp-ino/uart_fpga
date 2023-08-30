@@ -22,6 +22,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.math_real.all;
+
+library xil_defaultlib;
+use xil_defaultlib.uart_pkg.all;
 
 entity ckdiv_ip is
     Port ( 
@@ -33,12 +37,12 @@ end ckdiv_ip;
 
 architecture Behavioral of ckdiv_ip is
 
-    constant out_bit: integer := 1;
-    signal r_internal_count: std_logic_vector (out_bit downto 0) := (others => '0');
+    constant n_bit: integer := positive(ceil(log2(real(clock_scaling_factor))));
+    signal r_internal_count: std_logic_vector (n_bit - 1 downto 0) := (others => '0');
 
 begin
 
-    o_ckout <= r_internal_count(out_bit);
+    o_ckout <= r_internal_count(n_bit - 1);
 
     counter: process(i_ck)
     begin

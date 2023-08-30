@@ -1,6 +1,6 @@
 # W5 is the clock pin
-set_property PACKAGE_PIN W5 [get_ports i_ckin]
-set_property IOSTANDARD LVCMOS33 [get_ports i_ckin]
+set_property PACKAGE_PIN W5 [get_ports i_ck]
+set_property IOSTANDARD LVCMOS33 [get_ports i_ck]
 
 # for the reset I use one of pins that are connected to pushbuttons
 set_property PACKAGE_PIN W19 [get_ports i_rst]
@@ -21,11 +21,18 @@ set_property IOSTANDARD LVCMOS33 [get_ports i_rx]
 set_property PACKAGE_PIN A18 [get_ports o_tx]
 set_property IOSTANDARD LVCMOS33 [get_ports o_tx]
 
+# These are flag signals and they are mapped to LED pins
+set_property PACKAGE_PIN E19 [get_ports o_tx_busy]
+set_property IOSTANDARD LVCMOS33 [get_ports o_tx_busy]
+set_property PACKAGE_PIN V16 [get_ports o_rx_buffer_full]
+set_property IOSTANDARD LVCMOS33 [get_ports o_rx_buffer_full]
+
 # T17 is connected to a pushbutton and is used to send a tx request to the circuit
-set_property PACKAGE_PIN T17 [get_ports i_transmit]
-set_property IOSTANDARD LVCMOS33 [get_ports i_transmit]
+set_property PACKAGE_PIN T17 [get_ports i_transmit_req]
+set_property IOSTANDARD LVCMOS33 [get_ports i_transmit_req]
 
 # set this option so the synthesizer doesn't complain
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
+
 

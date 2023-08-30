@@ -40,6 +40,7 @@ entity serializer_ip is
         i_ck : in std_logic;
         i_rst : in std_logic;
         o_byte : out std_logic_vector (byte_width_bit - 1 downto 0);
+        o_busy: out std_logic;
         o_byte_valid : out std_logic
     );
 end serializer_ip;
@@ -121,6 +122,11 @@ begin
                 case r_present_state is
                 when idle =>
                     r_num <= 0;
+                    if i_transmit = '1' and i_tx_busy = '0' then
+                        o_busy <= '1';
+                    else
+                        o_busy <= '0';
+                    end if;
                 when assert_valid =>
                     o_byte <= i_word(8*r_num + 7 downto 8*r_num);
                     o_byte_valid <= '1';
@@ -132,6 +138,9 @@ begin
                     null;
                 when increment =>
                     r_num <= r_num + 1;
+                    if r_num = word_width_byte - 1 then
+                        o_busy <= '0';
+                    end if;
                 end case;
             end if;
         end if;
