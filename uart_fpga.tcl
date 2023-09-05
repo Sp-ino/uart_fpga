@@ -18,17 +18,6 @@
 proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
- "[file normalize "$origin_dir/vivado_project/tb_behav.wcfg"]"\
- "[file normalize "$origin_dir/vivado_project/tb_behav1.wcfg"]"\
-  ]
-  foreach ifile $files {
-    if { ![file isfile $ifile] } {
-      puts " Could not find local file $ifile "
-      set status false
-    }
-  }
-
-  set files [list \
  "[file normalize "$origin_dir/src/common_pkg.vhd"]"\
  "[file normalize "$origin_dir/src/uart_pkg.vhd"]"\
  "[file normalize "$origin_dir/src/ckdiv_ip.vhd"]"\
@@ -318,12 +307,6 @@ set files [list \
 ]
 add_files -norecurse -fileset $obj $files
 
-# Add local files from the original project (-no_copy_sources specified)
-set files [list \
- [file normalize "${origin_dir}/vivado_project/tb_behav.wcfg" ]\
-]
-set added_files [add_files -fileset sim_2 $files]
-
 # Set 'sim_2' fileset file properties for remote files
 set file "$origin_dir/src/tb/tx_interf_tb.vhd"
 set file [file normalize $file]
@@ -351,12 +334,6 @@ set files [list \
  [file normalize "${origin_dir}/src/tb/top_tb.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
-
-# Add local files from the original project (-no_copy_sources specified)
-set files [list \
- [file normalize "${origin_dir}/vivado_project/tb_behav1.wcfg" ]\
-]
-set added_files [add_files -fileset sim_3 $files]
 
 # Set 'sim_3' fileset file properties for remote files
 set file "$origin_dir/src/tb/top_tb.vhd"
