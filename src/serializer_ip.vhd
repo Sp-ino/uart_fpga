@@ -1,9 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Engineer: Valerio Spinogatti
 -- 
--- Create Date: 25.08.2023 15:07:14
--- Design Name: 
 -- Module Name: deserializer_ip - Behavioral
 -- Project Name: 
 -- Target Devices: 
@@ -16,6 +13,9 @@
 -- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
+-- 
+-- Copyright (c) 2023 Valerio Spinogatti
+-- Licensed under Apache license
 ----------------------------------------------------------------------------------
 
 

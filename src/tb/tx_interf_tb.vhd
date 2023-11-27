@@ -1,9 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Valerio Spinogatti
 -- 
--- Create Date: 29.05.2022 22:13:42
--- Design Name: 
 -- Module Name: tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
@@ -16,6 +13,8 @@
 -- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
+-- Copyright (c) 2023 Valerio Spinogatti
+-- Licensed under Apache license
 ----------------------------------------------------------------------------------
 
 
